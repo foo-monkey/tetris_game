@@ -1,0 +1,9 @@
+# venv local files
+.idea
+pyvenv.cfg
+share
+lib
+lib64
+include
+bin
+
