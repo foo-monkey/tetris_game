@@ -4,7 +4,7 @@ from logging.handlers import RotatingFileHandler
 
 import datetime,time
 #need to add config file.
-from configUtils import config
+#from configUtils import config
 
 
 #### Variables declaration

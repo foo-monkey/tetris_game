@@ -126,7 +126,7 @@ T = [['.....',
 
 shapes = [S, Z, I, O, J, L, T]
 shape_colors = [(0, 255, 0), (255, 0, 0), (0, 255, 255), (255, 255, 0), (255, 165, 0), (0, 0, 255), (128, 0, 128)]
-
+global_score = 0
 
 # index 0 - 6 represent shape
 
@@ -135,12 +135,15 @@ class Piece(object):
     rows = 20  # y
     columns = 10  # x
 
+
     def __init__(self, column, row, shape):
         self.x = column
         self.y = row
         self.shape = shape
         self.color = shape_colors[shapes.index(shape)]
         self.rotation = 0  # number from 0-3
+        #self.class_score = 0
+
 
 
 def create_grid(locked_positions={}):
@@ -190,6 +193,20 @@ def check_lost(positions):
             return True
     return False
 
+def update_score():
+    global global_score
+    global_score +=1
+    return global_score
+
+
+def get_score():
+    global global_score
+    return global_score
+
+def fresh_score():
+    global global_score
+    global_score = 0
+    return global_score
 
 def get_shape():
     global shapes, shape_colors
@@ -226,11 +243,14 @@ def clear_rows(grid, locked):
             inc += 1
             # add positions to remove from locked
             ind = i
+            update_score()
+            print(get_score())
             for j in range(len(row)):
                 try:
                     del locked[(j, i)]
                 except:
                     continue
+
     if inc > 0:
         for key in sorted(list(locked), key=lambda x: x[1])[::-1]:
             x, y = key
@@ -255,6 +275,13 @@ def draw_next_shape(shape, surface):
 
     surface.blit(label, (sx + 10, sy - 30))
 
+def draw_score(surface):
+    font = pygame.font.SysFont('comicsans', 30)
+    label = font.render(f'Player score: {get_score()}', 1, (255, 255, 255))
+    sx = top_left_x + play_width + 50
+    sy = top_left_y + play_height / 5 - 100
+    #pygame.draw.rect(surface, get_score(),(sx + 1 * 30, sy + 2 * 30, 30, 30), 0)
+    surface.blit(label, (sx + 1, sy - 3))
 
 def draw_window(surface):
     surface.fill((0, 0, 0))
@@ -296,6 +323,7 @@ def main():
         fall_time += clock.get_rawtime()
         level_time += clock.get_rawtime()
         clock.tick()
+        is_exit = False;
 
         if level_time / 1000 > 4:
             level_time = 0
@@ -334,15 +362,22 @@ def main():
 
                 if event.key == pygame.K_DOWN:
                     # move shape down
-                    current_piece.y += 1
+                    current_piece.y += 2
                     if not valid_space(current_piece, grid):
-                        current_piece.y -= 1
+                        current_piece.y -= 2
 
-                '''if event.key == pygame.K_SPACE:
+                if event.key == pygame.K_SPACE:
                     while valid_space(current_piece, grid):
                         current_piece.y += 1
                     current_piece.y -= 1
-                    print(convert_shape_format(current_piece))'''  # todo fix
+                    print(convert_shape_format(current_piece))
+
+                if event.key == pygame.K_ESCAPE:
+                    print(f"Bye ")
+                    #exit()
+                    is_exit = True
+
+
 
         shape_pos = convert_shape_format(current_piece)
 
@@ -367,11 +402,20 @@ def main():
 
         draw_window(win)
         draw_next_shape(next_piece, win)
+        draw_score(win)
         pygame.display.update()
 
         # Check if user lost
         if check_lost(locked_positions):
             run = False
+
+        if is_exit==True:
+            draw_text_middle("Bye", 40, (255, 255, 255), win)
+            pygame.display.update()
+            pygame.time.delay(1000)
+            pygame.quit()
+
+
 
     draw_text_middle("You Lost", 40, (255, 255, 255), win)
     pygame.display.update()
@@ -387,6 +431,7 @@ def main_menu():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+                fresh_score()
 
             if event.type == pygame.KEYDOWN:
                 main()
