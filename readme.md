@@ -11,7 +11,7 @@
     <li><a href="#usage">Usage</a></li>
   </ol>
 </details>
-![game-screenshot]](https://github.com/foo-monkey/tetris_game/blob/master/p2.png?raw=true)
+![game-screenshot](https://github.com/foo-monkey/tetris_game/blob/master/p2.png?raw=true)
 
 ## About The Project
 
