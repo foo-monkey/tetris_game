@@ -15,11 +15,15 @@
 
 ## About The Project
 
-Simple script design specifically to kill time. 
+Simple script design specifically to kill time.
+<div align="center">
+  <a href="https://github.com/foo-monkey/tetris_game/blob/master/p22.png">
+    <img src="p22.png" alt="screenshot" width="300" height="300">
+  </a>
 
 ### Installation
 
-make sure to run install first on requirements.
+make sure to run install first on requirements first.
 
 ## Usage
 
